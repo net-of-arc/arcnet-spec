@@ -1,6 +1,6 @@
 # ARCNET — Specification
 
-A **file format and folder convention** for a knowledge graph stored as plain Markdown.It depends on no program, library, or language. Any producer and any consumer interoperate through the format.
+A **file format and folder convention** for a knowledge graph stored as plain Markdown. It depends on no program, library, or language. Any producer and any consumer interoperate through the format.
 
 ## Three layers
 
@@ -10,7 +10,7 @@ The graph specification consists of three layers.
 | ------------------ | --------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- |
 | **1 · Mechanism**  | [`CORE.md`](CORE.md)                                            | how a node is written, identified, linked, merged, versioned, exchanged | yes                                                             |
 | **2 · Vocabulary** | [`SCHEMA.md`](SCHEMA.md) + [`domain/*/Class,Property`](domain/) | every predicate and every class, as nodes                               | yes — each bundle's `Class/`/`Property/` folder is the registry |
-| **3 · Narrative**  | [`domain/*/README.md`](domain/)                                 | semantic layer and a vocabulary per problem domain                      | **no**                                                          |
+| **3 · Narrative**  | [`domain/*/README.md`](domain/)                                 | why a vocabulary is shaped as it is, how to map a document onto it      | **no**                                                          |
 
 Read `CORE.md` to implement a parser. Read a bundle's `Class/` / `Property/` folder to learn what anything means. Read its `README.md` to understand why.
 
@@ -18,41 +18,29 @@ Read `CORE.md` to implement a parser. Read a bundle's `Class/` / `Property/` fol
 spec/
 ├── CORE.md                    # layer 1: mechanism only, no vocabulary
 ├── SCHEMA.md                  # layer 2: the two node formats and the meta-vocabulary
-└── domain/                    # layer 3: self-contained domains
+└── domain/                    # one self-contained folder per bundle
     ├── core/                  #   the core vocabulary every graph needs
-    │   ├── README.md          #     
-    │   ├── Class/             #     7 class nodes
-    │   └── Property/          #     51 predicate nodes
-    ├── article/
-    │   ├── README.md
-    │   ├── Class/              #     2 class nodes
-    │   └── Property/           #     11 predicate nodes
-    ├── core-thought/
-    │   ├── README.md
-    │   ├── Class/              #     1 class node
-    │   └── Property/           #     6 predicate nodes
-    ├── incident/
-    │   ├── README.md
-    │   ├── Class/              #     5 class nodes
-    │   └── Property/           #     23 predicate nodes
-    └── universal/
-        ├── README.md
-        ├── Class/              #     5 class nodes
-        └── Property/           #     11 predicate nodes
+    │   ├── README.md          #     layer 3: narrative
+    │   ├── Class/             #     layer 2: 7 class nodes
+    │   └── Property/          #     layer 2: 51 predicate nodes
+    ├── domainA/               #   example place holder 
+    ├── domainB/               #   example place holder 
+    ├── .../                   #   example place holder 
+    └── domainZ/               #   example place holder 
 ```
 
-Each bundle folder is self-contained and independently readable: its `Class/` and `Property/` holds exactly the semantic layer, its `README.md` explains why, and nothing under it depends on another domain unless explicitly specified.  
+Each bundle folder is self-contained and independently readable: its `Class/` and `Property/` holds exactly the semantic layer, its `README.md` explains why, and nothing under it depends on another domain unless explicitly specified.
 
 ## Meta-vocabulary
 
-Eleven predicates were added so that domain's semantic became a strict:
+Eleven predicates were added so that a domain's semantics become strict and machine-checkable:
 
-| Predicate                                               | Absorbs                                                          | Why it needed                                                                              |
+| Predicate                                               | Absorbs                                                          | Why it is needed                                                                           |
 | ------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `requiresOne` `requiresMany` `permitsOne` `permitsMany` | the cardinality columns of the domain profiles' predicate tables | distinguish `1` from `1..n`, and cardinality varies by class                               |
+| `requiresOne` `requiresMany` `permitsOne` `permitsMany` | the cardinality columns of the domain profiles' predicate tables | distinguish `1` from `1..n`, and whether a predicate is mandatory varies by class          |
 | `object`                                                | the `from → to:` annotations                                     | a range no checker could read                                                              |
-| `datatype`, `permits`                                   | "ISO-8601 date", the twelve Sowa combinations, enums             | value constraints stated only in sentences                                                 |
+| `inverseOf`                                             | "the inverse of …" sentences in predicate descriptions           | a backlink rule no checker could read                                                      |
+| `datatype`, `permits`                                   | "ISO-8601 date", the twelve Sowa categories, enums               | value constraints stated only in sentences                                                 |
 | `identityRule`                                          | each profile's identity statement                                | identity is a class-level rule and belongs on the class                                    |
 | `constraint`                                            | the profiles' normative structural rules                         | e.g. the timestamp ordering, the impact prefixes, the contributing-factor path restriction |
-| `bundle`                                                | the adoption story in `schema/README.md`                         | which nodes a graph installs together                                                      |
-
+| `bundle`                                                | the adoption story in [`SCHEMA.md`](SCHEMA.md) §6                | which nodes a graph installs together                                                      |
