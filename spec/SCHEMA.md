@@ -1,6 +1,6 @@
 # SCHEMA — The Vocabulary Layer
 
-**Status:** Draft · **Layer:** 2 of 3 · **Depends on:** [`CORE.md`](CORE.md)
+**Status:** Proposal · **Layer:** 2 of 3 · **Depends on:** [`CORE.md`](CORE.md)
 
 Every predicate and every class a graph uses is a node under one domain's `Class/` or `Property/`
 folder in [`domain/`](domain/). This document specifies the two node formats, the meta-vocabulary
@@ -40,39 +40,42 @@ The root cause — the underlying condition that made the incident possible; rec
 - object:: [[Cause]]
 ```
 
-| Predicate   | Card. | Meaning                                                                                                          |
-| ----------- | ----- | ---------------------------------------------------------------------------------------------------------------- |
-| `role`      | 1     | serialization position: `meta`, `text`, `edge`, `link` (CORE §4)                                                 |
-| `merge`     | 1     | how two contributions combine (CORE §8)                                                                          |
-| `text`      | 1     | the node body — what the predicate means                                                                         |
-| `bundle`    | 1     | the adoption unit this node belongs to (§6)                                                                      |
-| `label`     | 0..1  | heading/bold label for a `link`- or `text`-role predicate; defaults to the name split and capitalized            |
-| `aligned`   | 0..1  | the standard-vocabulary term this maps to, or `arc:<name>` when graph-native                                     |
-| `datatype`  | 0..1  | literal type, present exactly for `meta`/`text` roles: `string`, `date`, `datetime`, `number`, `boolean`, `enum` |
-| `permits`   | 0..n  | the legal values, present exactly when `datatype` is `enum`                                                      |
-| `object`    | 0..n  | the class this predicate's values are instances of — the range                                                   |
-| `inverseOf` | 0..n  | the forward predicate(s) this predicate is a backlink of                                                         |
+| Predicate     | Card. | Meaning                                                                                                          |
+| ------------- | ----- | ---------------------------------------------------------------------------------------------------------------- |
+| `role`        | 1     | serialization position: `meta`, `text`, `edge`, `link` (CORE §4)                                                 |
+| `merge`       | 1     | which contributed values are admitted, which is in force, and what happens to losers (CORE §8.4)                 |
+| `description` | 1     | the node body — what the predicate means; the `Property` class's default text                                    |
+| `bundle`      | 1     | the adoption unit this node belongs to (§6)                                                                      |
+| `label`       | 0..1  | heading/bold label for a `link`- or `text`-role predicate; defaults to the name split and capitalized            |
+| `aligned`     | 0..1  | the standard-vocabulary term this maps to, or `arc:<name>` when graph-native                                     |
+| `datatype`    | 0..1  | literal type, present exactly for `meta`/`text` roles: `string`, `date`, `datetime`, `number`, `boolean`, `enum` |
+| `oneOf`       | 0..n  | the legal values, present exactly when `datatype` is `enum`                                                      |
+| `object`      | 0..n  | the class(es) this predicate's values are expected to be instances of — the documented, open range               |
+| `inverseOf`   | 0..n  | the forward predicate(s) this predicate is a backlink of                                                         |
 
-### 2.1 Range is declared; domain is not
+### 2.1 Range is documented; domain is not
 
-`object` states what a predicate's values may be. There is deliberately no matching `subject`
+`object` documents what a predicate's values are expected to be. It is guidance for producers and
+readers, not a closed set: a consumer MUST NOT reject an edge whose target is of another class, so
+a predicate stays usable by classes that later bundles introduce, and a subclass instance (§3.5)
+always fits its ancestor's place. There is deliberately no matching `subject`
 predicate, because the domain half of an edge signature is **already stated, inverted**, by every
 class that requires or permits the predicate — and CORE §3 argues that inverted direction is the one
 a document-ingestion graph can actually check. Declaring the domain twice would reintroduce exactly
 the drift between two statements of one fact that this layer exists to prevent.
 
-So: to learn which classes may carry `about`, query the classes. To learn what `about` may
-point at, read `about`.
+So: to learn which classes may carry `about`, query the classes. To learn what `about` is
+expected to point at, read `about`.
 
 ### 2.2 Enumerations
 
 Where a predicate's values are drawn from a fixed set, `datatype: enum` and the set as one
-front-matter array: `permits: [paper, standard, tool, dataset, post]`. `permits` is `meta`-role, so
+front-matter array: `oneOf: [paper, standard, tool, dataset, post]`. `oneOf` is `meta`-role, so
 it lives in the front-matter like every other `meta` predicate. The set is closed unless the
 description says otherwise.
 
 A value set that varies by class — `class` means one thing on a `Class A` and another on an
-`Class B` — cannot be expressed by `permits`, which is a property of the predicate. Such a set is
+`Class B` — cannot be expressed by `oneOf`, which is a property of the predicate. Such a set is
 declared by each class, in a `constraint` (§3.3). A predicate needing this frequently is a sign that
 two predicates are colliding under one name.
 
@@ -102,8 +105,10 @@ A condition that made an incident possible or initiated it, stated as a recurrin
 **Identity**
 The condition stated as a recurring condition, never a dated occurrence — `Manual Configuration Push`, never `Config Push On 12 April`.
 
+- defaultText:: [[description]]
+
 ## Requires One
-- requiresOne:: [[text]]
+- requiresOne:: [[description]]
 - requiresOne:: [[causeType]]
 
 ## Requires Many
@@ -138,10 +143,18 @@ deliberate, checked denormalization so a class reads without opening every predi
 predicate listed under `…One` would be corrupted by the first merge that contributed a second
 value, which is why the agreement is a constraint on `Class`, not advice.
 
-### 3.2 Identity
+### 3.2 Identity and default text
 
 `identityRule` states how an instance forms its `@id`. It is a class-level statement because
 identity is a property of the class: CORE §5 fixes only the character set and uniqueness.
+
+`defaultText` names the `text`-role predicate an instance renders as its unlabelled body prose,
+directly under the H1 (CORE §4). It too is a class-level statement: `description` is the default
+text of a `Property` node, `text` that of an `Entity`, `abstract` that of a `Source`, and the same
+predicate rendered on another class appears under its label. A class without `defaultText` has no
+unlabelled prose. The two prose predicates of `core` differ in meaning and are never substitutes:
+`description` is a statement **about** the subject, mostly a definition; `text` is the content the
+subject **carries**, built up from sources.
 
 ### 3.3 Constraints
 
@@ -156,7 +169,9 @@ respects this order"*, *"impact bullets are facet-prefixed"*. They are normative
 ### 3.4 Keywords and universal predicates
 
 `@id` and `@type` are keywords carried by every node (CORE §3); they have no `Property` node and
-are never listed on any class.
+are never listed on any class. `@conflicts`, carried only by a node with open conflicts (CORE §8.2), and
+`@provenance`, recording which documents contributed which values (CORE §8.3), are keywords too:
+neither has a `Property` node or is listed on any class.
 
 `created` and `updated` are the only **universal predicates**: they are the creation and
 modification times CORE §9.5 requires, and they are mandatory on every graph node, including the
@@ -164,27 +179,88 @@ modification times CORE §9.5 requires, and they are mandatory on every graph no
 own source files under `domain/` MAY omit them; installing a bundle into a graph's `_schema/`
 stamps them like any other contribution.
 
-Every other predicate a node carries is listed by its class.
+Every other predicate a node carries is listed by its class or one of its ancestors.
+
+### 3.5 Subclasses
+
+`subClassOf` declares a class a specialization of exactly one parent class (`rdfs:subClassOf`). An
+instance of the subclass is an instance of the parent and of every ancestor above it, so it fits
+wherever an ancestor is expected. The subclass inherits everything the ancestors declare —
+`identityRule`, `defaultText`, every membership block and every constraint — and inheritance only
+adds or tightens:
+
+- it MAY list predicates no ancestor lists, under any of the four blocks;
+- it MAY tighten an inherited predicate from `permitsOne` to `requiresOne`, or from `permitsMany`
+  to `requiresMany`;
+- it MAY add constraints;
+- it MUST NOT redeclare `identityRule`, or `defaultText` where an ancestor declares one;
+- it MUST NOT relist, remove or loosen any predicate it inherits, other than by the tightening
+  above, and every inherited constraint holds on it unchanged.
+
+The chain is single-parent and acyclic; its root, the class without `subClassOf`, carries the
+`identityRule`. A node's `@type` names its most specific class, and the node is filed in that
+class's folder.
+
+### 3.6 Extending a class from another bundle
+
+A class is **declared** by exactly one bundle: its node carries `bundle`, `description` and its
+other class-level statements. Another bundle MAY **extend** it, attaching predicates of its own to
+the class without subclassing, with an extension file at `domain/<bundle>/Class/<Name>.md`:
+
+```markdown
+---
+"@id": Entity
+"@type": Class
+---
+# Entity
+
+## Permits Many
+- permitsMany:: [[secures]]
+```
+
+An extension file carries only `@id`, `@type: Class` and membership blocks, plus any constraints
+that concern only the predicates it attaches. It carries no `bundle`, `description`,
+`identityRule`, `defaultText` or `subClassOf` — those belong to the declaring bundle. Installing the
+bundle merges the extension into the declared class node in `_schema/` by CORE §8: the membership
+predicates merge by `union`, so installation order does not matter. The origin of each attached
+predicate stays recorded on the predicate's own `Property` node, by its `bundle`.
+
+An extension MUST NOT:
+
+- list a predicate the class or any of its ancestors already lists — not even to tighten it, which
+  only a subclass may do;
+- remove any predicate from the class, or change the meaning of any predicate it does not register;
+- extend a class whose declaring bundle is not adopted.
+
+An extension SHOULD attach predicates under `permitsOne`/`permitsMany`. Attaching one under
+`requiresOne`/`requiresMany` is allowed, but makes every existing instance of the class — and of
+its subclasses — non-conforming until the predicate is supplied, so a bundle doing so MUST say
+how existing instances are brought into conformance. An attached predicate applies to the class's
+subclasses by inheritance.
 
 ## 4. Entailment
 
 A consumer reading the adopted bundles' `Class/` and `Property/` folders MUST be able to answer,
-for any node, whether it conforms:
+for any node, whether it conforms. Every check reads the values in force; the open alternatives
+under `@conflicts` (CORE §8.2) and the attributions under `@provenance` (CORE §8.3) are not triples
+and are ignored, so a node in conflict conforms exactly when its values in force do.
 
 1. Its `@type` resolves to a `Class` node in an adopted bundle.
 2. Every predicate on it resolves to a `Property` node in an adopted bundle.
-3. Every predicate on it is listed by its class, or is universal (§3.4).
-4. Every `requiresOne`/`requiresMany` predicate, and every universal predicate, is present, at the
-   stated cardinality.
+3. Every predicate on it is listed by its class or an ancestor of it (§3.5), including what
+   adopted extensions attach (§3.6), or is universal (§3.4).
+4. Every `requiresOne`/`requiresMany` predicate of its class and its ancestors, and every
+   universal predicate, is present, at the stated cardinality.
 5. No `…One` predicate carries more than one value.
 6. Every predicate renders in the position its `role` declares.
-7. Every `enum`-typed predicate's values are drawn from its `permits` set.
-8. Every edge's target is an instance of a class in the predicate's `object` set, where one is
-   declared.
-9. Every backlink's forward edge exists (`inverseOf`, §2.3).
-10. Every `constraint` on its class holds.
+7. Every `enum`-typed predicate's values are drawn from its `oneOf` set.
+8. Every backlink's forward edge exists (`inverseOf`, §2.3).
+9. Every `constraint` on its class and its ancestors holds.
 
-Checks 1–9 are mechanical. Check 10 is mechanical per constraint but its expression is prose; a graph
+An edge whose target is not an instance of the predicate's documented `object` classes, or their
+subclasses, MAY be reported as a warning; it is never a conformance failure (§2.1).
+
+Checks 1–8 are mechanical. Check 9 is mechanical per constraint but its expression is prose; a graph
 wanting machine-checked constraints refines `constraint` into a shape language of its own, which is
 an extension of this layer, not a change to it.
 
@@ -204,7 +280,8 @@ an extension of this layer, not a change to it.
 
 `bundle` names the adoption unit a schema node belongs to, and also names the `domain/<bundle>/`
 folder that holds it. A graph adopts `core` plus zero or more domain bundles, and its consumer-side
-`_schema/` folder (`CORE.md` §6) holds exactly the union of those bundles' nodes.
+`_schema/` folder (`CORE.md` §6) holds exactly the union of those bundles' nodes, with every
+adopted extension (§3.6) merged into the class it extends.
 
 The `core` bundle defines the vocabulary every document-ingestion graph needs. Its vocabulary is
 exactly the contents of [`domain/core/Class/`](domain/core/Class/) and
@@ -217,15 +294,20 @@ In addition to CORE §12:
 
 - [ ] Every `@type` in use resolves to a `Class` node in an adopted bundle.
 - [ ] Every predicate in use resolves to a `Property` node in an adopted bundle.
-- [ ] Every `Property` node carries `role`, `merge`, `bundle`, and a `text` description.
-- [ ] Every `Class` node carries `bundle`, a `text` description, and an `identityRule`.
+- [ ] Every `Property` node carries `role`, `merge`, `bundle`, and a `description`.
+- [ ] Every `Class` node carries `bundle` and a `description`; every root class (no `subClassOf`)
+      carries an `identityRule`, and no subclass does.
+- [ ] Every `subClassOf` chain is acyclic and every parent resolves to a registered `Class`.
+- [ ] No subclass relists, removes or loosens an inherited predicate except by tightening (§3.5).
+- [ ] Every extension file names a class declared by an adopted bundle, carries only membership
+      blocks and constraints, and lists no predicate the class or its ancestors already list (§3.6).
 - [ ] Every predicate name is registered exactly once across all adopted bundles.
 - [ ] Every predicate a class lists resolves to a registered `Property`.
 - [ ] Every class an `object` bullet names resolves to a registered `Class`.
 - [ ] Every predicate an `inverseOf` bullet names resolves to a registered `Property`.
-- [ ] Every predicate registered in an adopted bundle is listed by at least one class in that
-      bundle, or is universal (§3.4).
+- [ ] Every predicate registered in an adopted bundle is listed by at least one class or extension
+      in that bundle, or is universal (§3.4).
 - [ ] Every class's `…One`/`…Many` listing agrees with each listed predicate's `merge` (§3.1).
-- [ ] Every `enum`-typed predicate declares at least one `permits` value.
+- [ ] Every `enum`-typed predicate declares at least one `oneOf` value.
 - [ ] No `[[link]]` inside a schema node's description creates an edge — illustrative names are
       written in backticks, never as wiki-links.

@@ -1,21 +1,14 @@
 ---
 "@id": about
 "@type": Property
-role: meta
+role: edge
 merge: union
-datatype: enum
+aligned: "schema:about"
 bundle: core
 ---
 # about
 
-The subject matter of a node: `technique`/`theory`/`platform`/`system`/`technology`/`language`/`framework`/`field`.
+**Primary subject.** `X about:: Y` asserts that the work or fragment `X` is principally about the entity `Y`. Narrower than `mentions`, which records every entity a document touches. What *kind* of thing `Y` is (a technique, a framework, a field) is a property of `Y` (`category`, `tags`), never of `X`. *e.g.* `rescorla-2026-tls13` → `about::` `Transport Layer Security`.
 
-## Permits
-- permits:: technique
-- permits:: theory
-- permits:: platform
-- permits:: system
-- permits:: technology
-- permits:: language
-- permits:: framework
-- permits:: field
+## Object
+- object:: [[Entity]]

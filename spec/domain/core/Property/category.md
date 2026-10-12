@@ -2,42 +2,28 @@
 "@id": category
 "@type": Property
 role: meta
-merge: immutable
+merge: union
 datatype: enum
+oneOf: [object, process, schema, script, juncture, participation, description, history, structure, situation, reason, purpose]
 bundle: core
 ---
 # category
 
-Records John F. Sowa's top-level category:
-- Level 1: independent · relative · mediating
-- Level 2: physical · abstract
-- Level 3: continuant · occurrent
-- Level 4 (Leaf): object · process · schema · script · juncture · participation · description · history · structure · situation · reason · purpose
+What kind of thing a subject *is*, as the leaf of John F. Sowa's top-level ontology. Each of the twelve leaves decodes to exactly one combination of the three upper levels, so only the leaf is stored and the upper levels are read from this table:
 
-The `category` predicate MUST contain the four decoded words. Allowed combinations, following John F. Sowa's taxonomy:
-- `[independent, physical, continuant, object]`
-- `[independent, physical, occurrent, process]`
-- `[independent, abstract, continuant, schema]`
-- `[independent, abstract, occurrent, script]`
-- `[relative, physical, continuant, juncture]`
-- `[relative, physical, occurrent, participation]`
-- `[relative, abstract, continuant, description]`
-- `[relative, abstract, occurrent, history]`
-- `[mediating, physical, continuant, structure]`
-- `[mediating, physical, occurrent, situation]`
-- `[mediating, abstract, continuant, reason]`
-- `[mediating, abstract, occurrent, purpose]`
+| Leaf (Level 4)  | Level 1     | Level 2  | Level 3    |
+| --------------- | ----------- | -------- | ---------- |
+| `object`        | independent | physical | continuant |
+| `process`       | independent | physical | occurrent  |
+| `schema`        | independent | abstract | continuant |
+| `script`        | independent | abstract | occurrent  |
+| `juncture`      | relative    | physical | continuant |
+| `participation` | relative    | physical | occurrent  |
+| `description`   | relative    | abstract | continuant |
+| `history`       | relative    | abstract | occurrent  |
+| `structure`     | mediating   | physical | continuant |
+| `situation`     | mediating   | physical | occurrent  |
+| `reason`        | mediating   | abstract | continuant |
+| `purpose`       | mediating   | abstract | occurrent  |
 
-## Permits
-- permits:: [independent, physical, continuant, object]
-- permits:: [independent, physical, occurrent, process]
-- permits:: [independent, abstract, continuant, schema]
-- permits:: [independent, abstract, occurrent, script]
-- permits:: [relative, physical, continuant, juncture]
-- permits:: [relative, physical, occurrent, participation]
-- permits:: [relative, abstract, continuant, description]
-- permits:: [relative, abstract, occurrent, history]
-- permits:: [mediating, physical, continuant, structure]
-- permits:: [mediating, physical, occurrent, situation]
-- permits:: [mediating, abstract, continuant, reason]
-- permits:: [mediating, abstract, occurrent, purpose]
+`category` classifies subjects (`Entity`) only. The form of a work is `genre`; the subject a work is about is `about`.

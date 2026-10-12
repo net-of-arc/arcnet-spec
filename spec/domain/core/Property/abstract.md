@@ -2,7 +2,7 @@
 "@id": abstract
 "@type": Property
 role: text
-merge: firstWriteWin
+merge: append
 aligned: "schema:abstract"
 datatype: string
 bundle: core

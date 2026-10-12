@@ -2,7 +2,7 @@
 "@id": aligned
 "@type": Property
 role: meta
-merge: firstWriteWin
+merge: union
 datatype: string
 bundle: core
 ---

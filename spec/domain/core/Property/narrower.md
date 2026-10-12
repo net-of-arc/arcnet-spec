@@ -8,7 +8,10 @@ bundle: core
 ---
 # narrower
 
-The inverse of `broader` — an optional backlink from the more general concept to the specialization.
+The backlink of `broader` — an optional link from the more general concept to the specialization.
 
 ## Object
 - object:: [[Entity]]
+
+## Inverse Of
+- inverseOf:: [[broader]]

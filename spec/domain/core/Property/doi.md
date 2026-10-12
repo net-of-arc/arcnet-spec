@@ -3,7 +3,7 @@
 "@type": Property
 role: meta
 merge: fillIfEmpty
-aligned: "schema:doi"
+aligned: "prism:doi"
 datatype: string
 bundle: core
 ---

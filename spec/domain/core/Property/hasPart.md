@@ -3,12 +3,15 @@
 "@type": Property
 role: edge
 merge: union
-aligned: "schema:hasPart"
+aligned: "dcterms:hasPart"
 bundle: core
 ---
 # hasPart
 
-The inverse of `isPartOf` — an optional backlink from the whole to a component.
+The backlink of `isPartOf` — an optional link from the whole to a component.
 
 ## Object
 - object:: [[Entity]]
+
+## Inverse Of
+- inverseOf:: [[isPartOf]]

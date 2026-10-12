@@ -5,10 +5,12 @@ bundle: core
 ---
 # Entity
 
-A node for a subject occurring in sources, typed by Sowa category (`category`, §10.2).
+A node for a subject occurring in sources, typed by Sowa category (`category`).
 
 **Identity**
-The subject's preferred label (`skos:prefLabel`), human-readable and Title-Cased with spaces. Every other name the sources used is an `aliases` value. A colliding label is disambiguated by a parenthetical qualifier — `Handshake Protocol (TLS)`.
+The subject's preferred label (`skos:prefLabel`), human-readable and Title-Cased with spaces. Every other name the sources used is an `aliases` value. A colliding label — including one that collides, case-insensitively, with a schema node such as `Class` or `Object` — is disambiguated by a parenthetical qualifier: `Handshake Protocol (TLS)`, `Class (Programming)`.
+
+- defaultText:: [[text]]
 
 ## Requires One
 - requiresOne:: [[category]]
@@ -17,10 +19,9 @@ The subject's preferred label (`skos:prefLabel`), human-readable and Title-Cased
 ## Requires Many
 - requiresMany:: [[mentionedIn]]
 
-## Permits Any
+## Permits Many
 - permitsMany:: [[aliases]]
 - permitsMany:: [[tags]]
-- permitsMany:: [[concerns]]
 - permitsMany:: [[broader]]
 - permitsMany:: [[narrower]]
 - permitsMany:: [[isPartOf]]
@@ -30,9 +31,3 @@ The subject's preferred label (`skos:prefLabel`), human-readable and Title-Cased
 - permitsMany:: [[isReplacedBy]]
 - permitsMany:: [[conformsTo]]
 - permitsMany:: [[related]]
-- permitsMany:: [[referencedBy]]
-- permitsMany:: [[secures]]
-- permitsMany:: [[verifies]]
-
-## Constraints
-- constraint:: `category` MUST carry four values decoding one legal Sowa combination — one from each of the four levels listed by the `category` predicate's own `permits` set. Combinations outside that list are not conforming.

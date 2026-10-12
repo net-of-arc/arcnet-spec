@@ -4,15 +4,9 @@
 role: meta
 merge: immutable
 datatype: enum
+oneOf: [meta, text, edge, link]
 bundle: core
 ---
 # role
 
-One of `meta`/`text`/`href`/`edge`/`link` (§5): the predicate's serialization position.
-
-## Permits
-- permits:: meta
-- permits:: text
-- permits:: href
-- permits:: edge
-- permits:: link
+One of `meta`/`text`/`edge`/`link` (CORE §4): the predicate's serialization position.

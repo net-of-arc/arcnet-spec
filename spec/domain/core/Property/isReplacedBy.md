@@ -8,7 +8,10 @@ bundle: core
 ---
 # isReplacedBy
 
-The inverse of `replaces` — an optional backlink from the superseded subject to its successor.
+The backlink of `replaces` — an optional link from the superseded subject to its successor.
 
 ## Object
 - object:: [[Entity]]
+
+## Inverse Of
+- inverseOf:: [[replaces]]

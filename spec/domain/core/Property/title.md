@@ -3,7 +3,7 @@
 "@type": Property
 role: meta
 merge: immutable
-aligned: "schema:title"
+aligned: "dcterms:title"
 datatype: string
 bundle: core
 ---

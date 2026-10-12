@@ -9,7 +9,8 @@ bundle: core
 ---
 # mentions
 
-Asserts that the source document mentions the entity; recorded under the source's own `## Mentions` block.
+Asserts that the source document mentions the entity, or yielded the resource; recorded under the source's own `## Mentions` block.
 
 ## Object
 - object:: [[Entity]]
+- object:: [[Resource]]

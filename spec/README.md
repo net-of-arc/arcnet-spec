@@ -22,7 +22,7 @@ spec/
     ├── core/                  #   the core vocabulary every graph needs
     │   ├── README.md          #     layer 3: narrative
     │   ├── Class/             #     layer 2: 7 class nodes
-    │   └── Property/          #     layer 2: 51 predicate nodes
+    │   └── Property/          #     layer 2: 49 predicate nodes
     ├── domainA/               #   example place holder 
     ├── domainB/               #   example place holder 
     ├── .../                   #   example place holder 
@@ -33,14 +33,16 @@ Each bundle folder is self-contained and independently readable: its `Class/` an
 
 ## Meta-vocabulary
 
-Eleven predicates were added so that a domain's semantics become strict and machine-checkable:
+Thirteen predicates were added so that a domain's semantics become strict and machine-checkable:
 
 | Predicate                                               | Absorbs                                                          | Why it is needed                                                                           |
 | ------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `requiresOne` `requiresMany` `permitsOne` `permitsMany` | the cardinality columns of the domain profiles' predicate tables | distinguish `1` from `1..n`, and whether a predicate is mandatory varies by class          |
-| `object`                                                | the `from → to:` annotations                                     | a range no checker could read                                                              |
+| `object`                                                | the `from → to:` annotations                                     | an expected range no producer could read                                                   |
 | `inverseOf`                                             | "the inverse of …" sentences in predicate descriptions           | a backlink rule no checker could read                                                      |
-| `datatype`, `permits`                                   | "ISO-8601 date", the twelve Sowa categories, enums               | value constraints stated only in sentences                                                 |
+| `datatype`, `oneOf`                                     | "ISO-8601 date", the twelve Sowa categories, enums               | value constraints stated only in sentences                                                 |
 | `identityRule`                                          | each profile's identity statement                                | identity is a class-level rule and belongs on the class                                    |
+| `defaultText`                                           | "the unlabelled paragraph is …" conventions                      | which prose renders unlabelled is a class-level choice, not a property of the predicate    |
+| `subClassOf`                                            | copy-pasted membership blocks across related classes             | a class extends another by adding or tightening predicates, never by repeating them        |
 | `constraint`                                            | the profiles' normative structural rules                         | e.g. the timestamp ordering, the impact prefixes, the contributing-factor path restriction |
 | `bundle`                                                | the adoption story in [`SCHEMA.md`](SCHEMA.md) §6                | which nodes a graph installs together                                                      |

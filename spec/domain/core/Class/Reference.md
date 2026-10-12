@@ -5,10 +5,10 @@ bundle: core
 ---
 # Reference
 
-A node for an external work the graph points to but has not ingested, or a topic/area tracked for reading or research.
+A node for an external work the graph points to but has not ingested.
 
 **Identity**
-The work's own name, as its authors established it.
+The work's own name, as its authors established it, with characters CORE §5 forbids removed; the verbatim name is the `title`.
 
 ## Requires One
 - requiresOne:: [[title]]
@@ -17,9 +17,10 @@ The work's own name, as its authors established it.
 - permitsOne:: [[url]]
 - permitsOne:: [[published]]
 - permitsOne:: [[doi]]
+- permitsOne:: [[genre]]
 
-## Permits Any
+## Permits Many
 - permitsMany:: [[author]]
 - permitsMany:: [[isCitedBy]]
 - permitsMany:: [[about]]
-- permitsMany:: [[genre]]
+- permitsMany:: [[sameAs]]

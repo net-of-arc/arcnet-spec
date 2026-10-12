@@ -3,16 +3,10 @@
 "@type": Property
 role: meta
 merge: union
-datatype: enum
+aligned: "schema:genre"
+datatype: string
 bundle: core
 ---
 # genre
 
-Genre of the node: `paper`/`standard`/`tool`/`dataset`/`post`.
-
-## Permits
-- permits:: paper
-- permits:: standard
-- permits:: tool
-- permits:: dataset
-- permits:: post
+Genre of the node.
