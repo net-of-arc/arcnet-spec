@@ -5,7 +5,15 @@ This document specifies a **file format and folder convention** for a knowledge 
 
 ## Documents
 
-<!-- TBD -->
+### Core
+
+|                        | Document                                                               | Holds                                                                   |
+| ---------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **1 · Mechanism**      | [`CORE.md`](./spec/CORE.md)                                            | how a node is written, identified, linked, merged, versioned, exchanged |
+| **2 · Vocabulary**     | [`SCHEMA.md`](./spec/SCHEMA.md) + [`domain/*/Class,Property`](domain/) | every predicate and every class, as nodes to defined the graph shape    |
+| **3 · Core Narrative** | [`domain/core/README.md`](./spec/domain/core/README.md)                | why a core vocabulary is shaped as it is, how to map a document onto it |
+
+
 
 ## License
 

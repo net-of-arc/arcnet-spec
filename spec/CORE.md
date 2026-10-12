@@ -1,6 +1,6 @@
 # CORE — Mechanism
 
-**Status:** Draft · **Layer:** 1 of 3
+**Status:** Proposal · **Layer:** 1 of 3
 
 This document specifies the **mechanism** of a knowledge graph stored as plain Markdown: the
 RDF-aligned data model, the node model, identity, folder layout, edges, the merge protocol, version
